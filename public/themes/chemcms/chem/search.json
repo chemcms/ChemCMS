@@ -1,0 +1,8 @@
+{
+    "name": "化学产品搜索",
+    "action": "chem/Search/index",
+    "description": "化学产品搜索",
+    "order": 10.0,
+    "more": {
+    }
+}

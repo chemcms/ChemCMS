@@ -1,0 +1,38 @@
+<h3 class="section-title">留言板</h3>
+<form class="form-light js-ajax-form" role="form" method="post" action="{:cmf_plugin_url('Guestbook://Guestbook/add')}">
+    <div class="form-group">
+        <label>公司</label>
+        <input type="text" class="form-control" placeholder="Your company" name="company">
+    </div>
+    <div class="form-group">
+        <label>姓名</label>
+        <input type="text" class="form-control" placeholder="Your name" name="full_name">
+    </div>
+    <div class="form-group">
+        <label>手机</label>
+        <input type="mobile" class="form-control" placeholder="Your mobile" name="mobile">
+    </div>
+    <div class="form-group">
+        <label>邮箱</label>
+        <input type="email" class="form-control" placeholder="Email address" name="email">
+    </div>
+    <div class="form-group">
+        <label>内容</label>
+        <textarea class=form-control id="message" placeholder="Write you message here..." style="height: 100px;"
+                  name="content"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>验证码</label>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control captcha" placeholder="please enter the code" name="captcha"
+                       autocomplete="off">
+            </div>
+            <div class="col-md-6">
+                <captcha height="38" width="160" font-size="20"/>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary js-ajax-submit" data-wait="1500">发送留言</button>
+</form>

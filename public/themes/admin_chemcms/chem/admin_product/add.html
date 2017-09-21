@@ -1,0 +1,166 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('AdminProduct/index')}">所有产品</a></li>
+        <li class="active"><a href="{:url('AdminProduct/add')}">添加产品</a></li>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('AdminProduct/addPost')}">
+        <div class="form-group">
+            <label for="js-categories-name-input" class="col-sm-2 control-label"><span
+                    class="form-required">*</span>分类</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="product[categories_name]"
+                       id="js-categories-name-input"
+                       readonly placeholder="请选择分类" onclick="doSelectCategory();">
+                <input type="hidden" class="form-control" name="product[categories]"
+                       id="js-categories-id-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="js-cas-input" class="col-sm-2 control-label"><span class="form-required">*</span>CAS号</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="product[cas]" id="js-cas-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="js-name-input" class="col-sm-2 control-label">英文名</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="product[name]" id="js-name-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="js-cn-name-input" class="col-sm-2 control-label"><span class="form-required">*</span>中文名</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="product[cn_name]" id="js-cn-name-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="js-mol-formula-input" class="col-sm-2 control-label">分子式</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="product[mol_formula]" id="js-mol-formula-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-product-mol_weight" class="col-sm-2 control-label">分子量</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="product[mol_weight]" id="input-product-mol_weight">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="js-thumbnail-input" class="col-sm-2 control-label">结构式</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="hidden" class="form-control" name="product[thumbnail]" id="js-thumbnail-input">
+                <img src="__TMPL__/public/assets/images/default-thumbnail.png" id="js-thumbnail-input-preview"
+                     style="width:135px;height:135px;border: 1px solid #ddd;cursor: pointer;"
+                     onclick="uploadOneImage('图片上传','#js-thumbnail-input');"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-product-keywords" class="col-sm-2 control-label">关键字</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="product[keywords]" id="input-product-keywords">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-product-description" class="col-sm-2 control-label">描述</label>
+            <div class="col-md-6 col-sm-10">
+                <textarea class="form-control" name="product[description]" id="input-product-description"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-product-content" class="col-sm-2 control-label">详细内容</label>
+            <div class="col-md-6 col-sm-10">
+                <script type="text/plain" id="input-product-content" name="product[content]"></script>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+                <a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript">
+    //编辑器路径定义
+    var editorURL = GV.WEB_ROOT;
+</script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+
+        editorcontent = new baidu.editor.ui.Editor();
+        editorcontent.render('input-product-content');
+        try {
+            editorcontent.sync();
+        } catch (err) {
+        }
+
+    });
+
+    function doSelectCategory() {
+        var selectedCategoriesId = $('#js-categories-id-input').val();
+        openIframeLayer("{:url('AdminCategory/select')}?ids=" + selectedCategoriesId, '请选择分类', {
+            area: ['700px', '400px'],
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                //do something
+
+                var iframeWin          = window[layero.find('iframe')[0]['name']];
+                var selectedCategories = iframeWin.confirm();
+                if (selectedCategories.selectedCategoriesId.length == 0) {
+                    layer.msg('请选择分类');
+                    return;
+                }
+                $('#js-categories-id-input').val(selectedCategories.selectedCategoriesId.join(','));
+                $('#js-categories-name-input').val(selectedCategories.selectedCategoriesName.join(' '));
+                //console.log(layer.getFrameIndex(index));
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+            }
+        });
+    }
+
+    var upload_path = '__UPLOAD__';
+    $(function () {
+        $('#js-cas-input').change(function () {
+            var cas = $(this).val();
+            if (cas.match(/\d+\-\d+\-\d/)) {
+                $.ajax({
+                    url: 'http://www.chemium.cn/chemium/api/getCasInfo/cas/' + cas,
+                    dataType: 'jsonp',
+                    type: "GET",
+                    success: function (data) {
+                        if (data.code == 0) return;
+                        $('#js-cn-name-input').val(data.data.cn_name);
+                        $('#js-name-input').val(data.data.name);
+                        $('#js-mol-formula-input').val(data.data.mol_formula);
+                        if (data.data.png) {
+                            $('#js-thumbnail-input').val('has');
+                            $('#js-thumbnail-input-preview').attr('src', 'http://www.chemium.cn/chemium/api/getCompoundPng/cas/' + cas);
+//                            $.ajax({
+//                                url: "{:url('AdminProduct/getPng')}?cas=" + cas,
+//                                dataType: 'json',
+//                                type: "POST",
+//                                success: function (data) {
+//                                    $('#js-thumbnail-img').attr('src', upload_path + data.data.file).show();
+//                                    $('#js-thumbnail-input').val(data.data.file);
+//                                }
+//                            });
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

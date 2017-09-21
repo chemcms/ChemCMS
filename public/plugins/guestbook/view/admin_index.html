@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+    <include file="public/head"/>
+    <title>ThinkCMF插件演示首页</title>
+    <meta name="description" content="ThinkCMF插件演示首页">
+    <meta name="keywords" content="ThinkCMF插件演示首页">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a>所有留言</a></li>
+    </ul>
+    <form method="post" class="js-ajax-form margin-top-20" action="#">
+        <table width="100%" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th width="50">ID</th>
+                <th width="100">姓名</th>
+                <th>手机</th>
+                <th>单位名称</th>
+                <th width="150">邮箱</th>
+                <th style="min-width: 60px;">标题</th>
+                <th>内容</th>
+                <th width="130">留言时间</th>
+                <th width="120">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="messages" item="vo">
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.full_name}</td>
+                    <td>{$vo.mobile}</td>
+                    <td>{$vo.company}</td>
+                    <td>{$vo.email}</td>
+                    <td>{$vo.title}</td>
+                    <td>{$vo.content}</td>
+                    <td>{:date('Y-m-d H:i',$vo.create_time)}</td>
+                    <td>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+    </form>
+    <ul class="pagination">{$page}</ul>
+</div>
+<include file="public/scripts"/>
+</body>
+</html>

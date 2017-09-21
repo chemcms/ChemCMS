@@ -1,0 +1,47 @@
+<hook name="footer_start"/>
+<br>
+<footer class="footer-primary">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="links">
+                    <links>
+                        <a href="{$vo.url|default=''}" target="{$vo.target|default=''}">{$vo.name|default=''}</a>&nbsp;
+                    </links>
+
+                </div>
+                <p>
+                    Made by <a href="http://www.chemcms.com" target="_blank">ChemCMS</a>
+                    Based on
+                    <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a>.
+                    Icons from
+                    <a href="http://fortawesome.github.com/Font-Awesome/" target="_blank">Font Awesome</a>
+                    <br>
+                    备案号:
+                    <notempty name="site_info.site_icp">
+                        <a href="http://www.miitbeian.gov.cn/" target="_blank">{$site_info.site_icp}</a>
+                        <else/>
+                        请在后台设置"网站信息"设置"备案信息"
+                    </notempty>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+<style>
+    #backtotop {
+        position: fixed;
+        bottom: 50px;
+        right: 20px;
+        display: none;
+        cursor: pointer;
+        font-size: 50px;
+        z-index: 9999;
+    }
+
+    #backtotop:hover {
+        color: #333
+    }
+</style>
+<div id="backtotop"><i class="fa fa-arrow-circle-up"></i></div>
+{$site_info.site_analytics|default=''}

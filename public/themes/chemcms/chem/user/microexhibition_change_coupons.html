@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{$site_name}</title>
+<tc_include file="Public:head" />
+<style>
+	.table td,.table tr{
+		vertical-align: middle !important;
+	}
+	.stamp * {
+		padding: 0;
+		margin: 0;
+		list-style:none;
+		font-family:"Microsoft YaHei", 'Source Code Pro', Menlo, Consolas, Monaco, monospace;
+	}
+	.stamp {
+		display:inline-block;
+		height: 140px;
+		padding: 0 10px;
+		margin-top: 10px;
+		position: relative;
+		overflow: hidden;
+	}
+	.stamp:before {
+		content: '';
+		position: absolute;
+		top:0;
+		bottom:0;
+		left:10px;
+		right:10px;
+		z-index: -1;
+	}
+	.stamp i {
+		position: absolute;
+		left: 10%;
+    	top: 10px;
+		height: 190px;
+		width: 390px;
+		background-color: rgba(255, 255, 255, .15);
+		transform: rotate(-30deg);
+	}
+	.stamp .par {
+		float: left;
+		padding: 16px 15px;
+		width: 450px;
+		border-right:2px dashed rgba(255, 255, 255, .3);
+		text-align: left;
+	}
+	.stamp .par p {
+		color:#fff;
+		font-size: 16px;
+		line-height: 21px;
+	}
+	.stamp .par span {
+		font-size: 50px;
+		color:#fff;
+		margin-right: 5px;
+		line-height: 65px;
+	}
+	.stamp .par .sign {
+		font-size: 34px;
+	}
+	.stamp .par sub {
+		position: relative;
+		top:-5px;
+		color:rgba(255, 255, 255, .8);
+	}
+	.stamp .copy {
+		display: inline-block;
+		padding:10px 14px;
+		width:145px;
+		vertical-align: text-bottom;
+		font-size: 30px;
+		color:rgb(255,255,255);
+		text-align: center;
+		line-height: initial;
+	}
+	.stamp .copy p {
+		font-size: 16px;
+		margin-top: 5px;
+	}
+	
+	.stamp .copy .btn{
+		padding: 3px 8px;;
+	}
+	
+	.stamp01 {
+		background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 5px, #F39B00 5px);
+		background-size: 15px 15px;
+		background-position: 9px 3px;
+	}
+	.stamp01:before {
+		background-color:#F39B00;
+	}
+	.stamp02 {
+		background: radial-gradient(transparent 0, transparent 5px, #D24161 5px);
+		background-size: 15px 15px;
+		background-position: 9px 3px;
+	}
+	.stamp02:before {
+		background-color:#D24161;
+	}
+	.stamp03 {
+		background: radial-gradient(transparent 0, transparent 5px, #7EAB1E 5px);
+		background-size: 15px 15px;
+		background-position: 9px 3px;
+	}
+	.stamp03:before {
+		background-color:#7EAB1E;
+	}
+	.stamp03 .copy {
+		padding: 10px 6px 10px 12px;
+		font-size: 24px;
+	}
+	.stamp03 .copy p {
+		font-size: 14px;
+		margin-top: 5px;
+		margin-bottom: 8px;
+	}
+	.stamp03 .copy a {
+		background-color:#fff;
+		color:#333;
+		font-size: 14px;
+		text-decoration:none;
+		padding:5px 10px;
+		border-radius:3px;
+		display: block;
+	}
+	.stamp04 {
+		width: 390px;
+		background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 4px, #50ADD3 4px);
+		background-size: 12px 8px;
+		background-position: -5px 10px;
+	}
+	.stamp04:before {
+		background-color:#50ADD3;
+		left: 5px;
+		right: 5px;
+	}
+	.stamp04 .copy {
+		padding: 10px 6px 10px 12px;
+		font-size: 24px;
+	}
+	.stamp04 .copy p {
+		font-size: 14px;
+		margin-top: 5px;
+		margin-bottom: 8px;
+	}
+	.stamp04 .copy a {
+		background-color:#fff;
+		color:#333;
+		font-size: 14px;
+		text-decoration:none;
+		padding:5px 10px;
+		border-radius:3px;
+		display: block;
+	}
+</style>
+</head>
+
+<body class="body-white" id="top">
+	<tc_include file="Public:nav" />
+
+	<div class="container tc-main">
+		<div class="row">
+			<div class="col-md-3">
+				<tc_include file="Public:usernav" />
+			</div>
+			<div class="col-md-9">
+				<div class="tabs">
+					<ul class="nav nav-tabs">
+						<li><a href="{:U('art/user/microexhibitions')}"><i class="fa fa-star"></i> 我的微展览</a></li>
+						<li class="active"><a>微展览更换券</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="one">
+							<foreach name="coupons" item="vo">
+								<div class="stamp stamp01">
+									 <i></i>
+								    <div class="par">
+								    	<p>画入佳境</p>
+								    	<sub class="sign">￥</sub><span>{$vo.price}</span><sub>微展览更换券</sub>
+								    	<p>适用于微展览 <b>{$vo.user_exhibition_name}</b></p>
+								    </div>
+								    <div class="copy">
+								    	副券
+								    	<p>
+								    		{:date('Y-m-d',$vo['create_time'])}<br>
+								    		{:date('Y-m-d',$vo['expire_time'])}
+							    		</p>
+							    		<eq name="vo.status" value="1">
+											<a class="btn btn-success btn-sm" href="{:U('art/microexhibition/index',array('change'=>$vo['user_exhibition_id']))}">立即使用</a>
+										</eq>
+										<empty name="vo.status" value="">
+											<a class="btn btn-warning btn-sm">已使用</a>
+										</empty>
+										<eq name="vo.status" value="2">
+											<a class="btn btn-primary btn-sm js-ajax-btn" href="{:U('art/user/get_microexhibition_change_coupon',array('id'=>$vo['id']))}">立即领取</a>
+										</eq>
+										
+								    </div>
+								</div>
+							</foreach>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<tc_include file="Public:footer" />
+
+	</div>
+
+	<tc_include file="Public:scripts" />
+</body>
+</html>

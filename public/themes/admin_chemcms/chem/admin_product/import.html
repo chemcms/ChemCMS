@@ -1,0 +1,172 @@
+<include file="public@header"/>
+<style>
+    .table td, .table th {
+        text-align: center;;
+    }
+
+    .js-error-log-wrap {
+        display: none;
+    }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('AdminProduct/index')}">所有产品</a></li>
+        <li><a href="{:url('AdminProduct/add')}">添加产品</a></li>
+        <li class="active"><a>导入产品</a></li>
+    </ul>
+    <empty name="file_uploaded">
+        <form class="well form-inline margin-top-20" method="post" action="{:url('AdminProduct/import')}"
+              id="upload-file-form">
+            请选择你要上传的文件:<br>
+            <input type="text" id="upload-file-input" name="file" class="form-control" style="width: 300px;"/>
+            <a href="javascript:openUploadDialog('上传文件',_uploadFileCallback,{},false,'file')"
+               class="btn btn-primary">立即上传</a>
+            <a href="__TMPL__/public/assets/files/product_import_template.xlsx">导入文件模板下载</a>
+        </form>
+        <else/>
+        <div class="well margin-top-20">
+            您要导入文件总共有{$file_rows_count}条数据，以下为您即将导入数据的前几十条!请先确认格式后再导入！
+            <a class="btn btn-primary" id="js-pack-import-btn">立即导入</a>
+            <a class="btn btn-warning" href="{:url('AdminProduct/import')}">继续导入</a>
+        </div>
+
+        <div class="js-error-log-wrap">
+            <div class="panel-group" role="tablist">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="collapseListGroupHeading1">
+                        <h4 class="panel-title">
+                            <a class="" role="button" data-toggle="collapse" href="#collapseListGroup1"
+                               aria-expanded="true" aria-controls="collapseListGroup1" id="js-error-log-title">
+
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseListGroup1" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="collapseListGroupHeading1" aria-expanded="true">
+                        <ul class="list-group" id="js-error-logs">
+                        </ul>
+                        <div class="panel-footer">Footer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form class="js-ajax-form" action="" method="post">
+            <table class="table table-hover table-bordered table-list">
+                <thead>
+                <tr>
+                    <th width="80">CAS号</th>
+                    <th>中文名</th>
+                    <th>英文名</th>
+                    <th width="50">价格</th>
+                    <th width="50">规格</th>
+                    <th width="50">包装</th>
+                    <th>纯度</th>
+                    <th>库存</th>
+                    <th width="50">品牌</th>
+                    <th width="50">供应商</th>
+                    <th width="80">货号</th>
+                    <th>位置</th>
+                </tr>
+                </thead>
+                <php>
+                    $status=array("1"=>"销售","0"=>"下架");
+                </php>
+                <foreach name="file_rows" item="vo">
+                    <tr>
+                        <td>{$vo.cas}</td>
+                        <td>{$vo.cn_name}</td>
+                        <td>{$vo.name|default=''}</td>
+                        <td>{$vo.price}</td>
+                        <td>{$vo.pack}{$vo.unit}</td>
+                        <td>{$vo.packing_material}</td>
+                        <td>{$vo.purity}</td>
+                        <td>{$vo.inventory}</td>
+                        <td>{$vo.brand}</td>
+                        <td>{$vo.provider}</td>
+                        <td>{$vo.product_no}</td>
+                        <td>{$vo.storage_place}</td>
+                    </tr>
+                </foreach>
+            </table>
+        </form>
+    </empty>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+
+    function _uploadFileCallback(dialog, files, params) {
+        $('#upload-file-input').val(files[0]['filepath']);
+        $('#upload-file-form').submit();
+    }
+    $(function () {
+        var $cas_thumbnail_bigger = $('#cas-thumbnail-bigger');
+        $('.cas-thumbnail').hover(function () {
+            $cas_thumbnail_bigger.attr('src', $(this).attr('src'));
+            $cas_thumbnail_bigger.show();
+        }, function () {
+            $cas_thumbnail_bigger.hide();
+        });
+    });
+
+    var importNoty;
+    parent.chem_adminpack_import_create_importNoty = function (callback) {
+
+        parent.Wind.use('noty', function () {
+            importNoty = parent.noty({
+                text: "正在导入...",
+                type: 'success',
+                timeout: false,
+                layout: 'center',
+                modal: true
+            });
+            callback(importNoty);
+        });
+
+    }
+
+    $('#js-pack-import-btn').on('click', function () {
+
+        parent.chem_adminpack_import_create_importNoty(function (noty) {
+            _importFile(1);
+        });
+
+    });
+
+    var logCount = 0;
+
+    function _importFile(page) {
+        $.ajax({
+            url: "{:url('chem/AdminProduct/importPost')}",
+            data: {page: page},
+            type: "POST",
+            dataType: 'json',
+            success: function (data) {
+                importNoty.setText(data.msg);
+                if (data.data.log.length > 0) {
+                    $('.js-error-log-wrap').show();
+                    logCount = logCount + data.data.log.length;
+                    $('#js-error-log-title').text('总共产生' + logCount + '条错误日志');
+                    var $logs = $('#js-error-logs');
+                    $.each(data.data.log, function (i, item) {
+                        $logs.append('<li class="list-group-item">第' + item.row_index + '行：' + item.message + '</li>');
+                    });
+                }
+                if (data.data.next_page > 0) {
+                    _importFile(data.data.next_page);
+                } else {
+                    setTimeout(function () {
+                        importNoty.close();
+                    }, 1000);
+                }
+            },
+            error: function () {
+
+            },
+        });
+    }
+
+</script>
+</body>
+</html>

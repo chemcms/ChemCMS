@@ -1,0 +1,59 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:url('AdminBrand/index')}">品牌管理</a></li>
+        <li><a href="{:url('AdminBrand/add')}">添加品牌</a></li>
+    </ul>
+    <table class="table table-hover table-bordered table-list margin-top-20">
+        <thead>
+        <tr>
+            <th width="50">ID</th>
+            <th>品牌名称</th>
+            <th>折扣</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="brands" item="vo">
+            <tr>
+                <td>{$vo.id}</td>
+                <td>{$vo.name}</td>
+                <td>
+                    <input class="form-control input-sm js-discount-input" type="text"
+                           style="width: 100px;display: inline-block;" data-id="{$vo.id}"
+                           value="{$discounts[$vo.id]['discount']|default=''}"/> 折
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th width="50">ID</th>
+            <th>品牌名称</th>
+            <th>折扣</th>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+    $('.js-discount-input').change(function () {
+        var $this    = $(this);
+        var id       = $this.data('id');
+        var discount = $this.val();
+        $.ajax({
+            url: "{:url('AdminCompanyDiscount/setDiscount')}",
+            type: 'POST',
+            data: {brand_id: id, discount: discount, company_id: {$company_id}},
+            success: function (data) {
+
+            },
+            error: function () {
+
+            }
+        })
+    });
+</script>
+</body>
+</html>

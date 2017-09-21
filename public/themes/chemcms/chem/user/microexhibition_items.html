@@ -1,0 +1,86 @@
+<!doctype html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>我的展览作品列表</title>
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<tc_include file="Public:head" />
+<style type="text/css">
+#container .grid-sizer, #container .item {
+	width: 24%;
+	margin: 10px 0.5%;
+	float: left;
+	zoom: 1;
+}
+#container .item .tc-gridbox{
+	opacity: 0;
+}
+</style>
+</head>
+<body class="body-white">
+	<tc_include file="Public:nav" />
+
+	<tc_include file="Public:rightnav" />
+	
+	<div class="container">
+		<h1 class="text-center">{$user_exhibition.user_exhibition_name}</h1>
+		<div>
+			<div id="container">
+				<div class="grid-sizer"></div>
+				<volist name="artworks" id="vo">
+
+				<div class="item">
+					<div class="tc-gridbox">
+						<div class="header">
+							<a href="{:leuu('art/artwork/view',array('id'=>$vo['id']))}">
+								<div class="item-image">
+									<empty name="vo.img_url">
+										<img src="__TMPL__Public/assets/images/default_tupian4.png" class="img-responsive" alt="" />
+									<else/>
+										<img src="{:sp_get_image_url($vo['img_url'],'!width300')}" class="img-responsive" alt="" />
+									</empty>
+								</div>
+							</a>
+
+							<h3>
+								<a href="{:leuu('art/artwork/view',array('id'=>$vo['id']))}">{$vo.name}</a>
+							</h3>
+						</div>
+					</div>
+				</div>
+				</volist>
+			</div>
+			<div class="clearfix"></div>
+			
+		</div>
+		<div class="clearfix"></div>
+		<tc_include file="Public:footer" />
+	</div>
+	<tc_include file="Public:scripts" />
+	<script src="__TMPL__Public/assets/js/imagesloaded.pkgd.min.js"></script>
+	<script src="__TMPL__Public/assets/js/masonry.pkgd.min.js"></script>
+	<script>
+		
+		$(function(){
+			var $container= $('#container').masonry({
+				columnWidth : '.grid-sizer',
+				itemSelector : '.item'
+			});
+			
+			$container.imagesLoaded().progress(function (imgLoad, image) {
+				var msnry = $container.data('masonry');
+				var itemSelector = msnry.options.itemSelector;
+		        var $item = $(image.img).parents(itemSelector);
+		        $('.tc-gridbox',$item).css('opacity',1);
+		        msnry.layout();
+		    });
+			
+		});
+		
+	</script>
+
+</body>
+</html>

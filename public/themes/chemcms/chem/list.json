@@ -1,0 +1,9 @@
+{
+    "name": "化学产品列表",
+    "action": "chem/List/index",
+    "description": "化学产品列表模板文件",
+    "order": 10.0,
+    "more": {
+
+    }
+}

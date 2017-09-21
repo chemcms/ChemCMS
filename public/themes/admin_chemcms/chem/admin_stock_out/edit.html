@@ -1,0 +1,130 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap">
+    <empty name="no_tab">
+        <ul class="nav nav-tabs">
+            <li><a href="{:url('AdminStockOut/index')}">出库单</a></li>
+            <li class="active"><a href="{:url('AdminStockOut/add')}">产品出库</a></li>
+            <li><a href="{:url('AdminStockOut/logs')}">出库记录</a></li>
+        </ul>
+    </empty>
+    <form method="post" class="form-horizontal js-ajax-form {$no_tab?'':'margin-top-20'}" action="{:url('AdminStockOut/editPost')}">
+        <div class="form-group">
+            <label for="input-category_name" class="col-sm-2 control-label">出库类型<span
+                    class="form-required">*</span></label>
+            <div class="col-md-6 col-sm-10">
+                <select class="form-control" name="category_name" id="input-category_name">
+                    <option value="销售订单">销售订单</option>
+                    <option value="内部领料">内部领料</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-remark" class="col-sm-2 control-label">备注</label>
+            <div class="col-md-6 col-sm-10">
+                <textarea class="form-control" name="remark" id="input-remark">{$stock_out.remark}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input name="id" type="hidden" value="{$stock_out.id}"/>
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
+                <a class="btn btn-primary"
+                   href="javascript:parent.openIframeLayer('{:url('AdminStockOut/printStockOut')}?id={$stock_out.id}','打印出库单',{area: ['95%', '95%']})">打印出库单</a>
+                <a class="btn btn-success js-ajax-dialog-btn" id="js-confirm-stock-out" data-href="{:url('AdminStockOut/confirm')}?id={$stock_out.id}" data-msg="您确认要出库吗？">
+                    确认出库
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                       aria-expanded="true" aria-controls="collapseOne">
+                        选择产品
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                 aria-labelledby="headingOne">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>序号</th>
+                        <th>名称</th>
+                        <th>CAS#|货号</th>
+                        <td>包装|纯度</td>
+                        <th>价格</th>
+                        <th>数量</th>
+                        <th>金额</th>
+                        <th>操作</th>
+                    </tr>
+                    <notempty name="stock_out_items">
+                        <php>$i=0;</php>
+                        <foreach name="stock_out_items" item="vo">
+                            <php>$i=$i+1</php>
+                            <tr>
+                                <td>{$i}</td>
+                                <td>{$vo.cn_name}<br>{$vo.name}</td>
+                                <td>{$vo.cas}<br>{$vo.product_no}</td>
+                                <td>{$vo.pack}{$vo.unit}/{$vo.packing_material}<br>{$vo.purity}</td>
+                                <td>{$vo.price}</td>
+                                <td>
+                                    <input value="{$vo.quantity}" type="number"
+                                           class="form-control input-sm input-quantity"
+                                           style="width:60px;"
+                                           data-key="{$key}"
+                                           min="1">
+                                </td>
+                                <td>
+                                            <span class="input-goods-amount-{$key}">
+                                                {:number_format(round($vo.price * $vo.quantity,2),2)}
+                                            </span>
+                                </td>
+                                <td>
+                                    <a href="{:url('AdminOrderDraft/deleteItem',array('id'=>$stock_out.id,'key'=>$key))}"
+                                       class="js-ajax-delete">
+                                        {:lang('DELETE')}
+                                    </a>
+                                </td>
+                            </tr>
+                        </foreach>
+                    </notempty>
+                    <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-center"><a href="javascript:doSelectProducts()">+ 选择产品</a>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<notempty name="stock_out.category_name">
+    <script>
+        $('#input-category_name').val('{$stock_out.category_name}');
+    </script>
+</notempty>
+<script>
+    function doSelectProducts() {
+        parent.openIframeLayer("{:url('chem/AdminStockOut/selectPack')}?stock_out_id={$stock_out.id}", '请添加产品', {
+            area: ['95%', '90%'],
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                var iframeWin = parent.window[layero.find('iframe')[0]['name']];
+                parent.layer.close(index); //如果设定了yes回调，需进行手工关闭
+            },
+            end: function () {
+                reloadPage(window);
+            }
+        });
+    }
+</script>
+</body>
+</html>

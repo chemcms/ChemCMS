@@ -1,0 +1,488 @@
+<include file="public@header"/>
+<style>
+    .table-input-sm {
+        width: 60px !important;
+        padding: 2px !important;
+        margin: 0 !important;
+    }
+
+    .table-select-sm {
+        margin-bottom: 0;
+        width: 100px;
+        height: 28px;
+    }
+
+    a {
+        cursor: pointer;
+    }
+</style>
+<script type="text/html" id="pack-tpl">
+    <tr>
+        <td><input type="text" class="table-input-sm" name="product_no"></td>
+        <td><input type="text" class="table-input-sm" name="price">元</td>
+        <td><input type="text" class="table-input-sm" name="inventory"></td>
+        <td><input type="text" class="table-input-sm" name="pack"></td>
+        <td><input type="text" class="table-input-sm" name="unit"></td>
+        <td><input type="text" class="table-input-sm" name="packing_material"></td>
+        <td><input type="text" class="table-input-sm" name="purity"></td>
+        <td><input type="text" class="table-input-sm" name="brand"></td>
+        <td><input type="text" class="table-input-sm" name="lead_time"></td>
+        <td>
+            <if condition="!empty($storage_places)">
+                <select name="storage_place" class="table-select-sm">
+                    <foreach name="storage_places" item="place">
+                        <option value="{$place.id}">{$place.name}</option>
+                    </foreach>
+                </select>
+                <else/>
+                <a href="{:url('AdminStoragePlace/add')}">添加货架</a>
+            </if>
+        </td>
+        <td>
+            <select name="status" class="table-select-sm">
+                <option value="1">发布</option>
+                <option value="0">下架</option>
+            </select>
+        </td>
+        <td>
+            <input type="hidden" name="id">
+            <input type="hidden" name="product_id" value="{$product.id}">
+            <a onclick="_packageSave(this);">保存</a>
+            <!--<a onclick="_packageInventoryChange(this)">出入库</a>-->
+            <a onclick="_packageDelete(this);">删除</a>
+        </td>
+    </tr>
+
+</script>
+
+<script>
+    function onCompoundImgError(obj) {
+        $(obj).hide();
+        $('#js-thumbnail-input-preview').show();
+    }
+</script>
+
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('AdminProduct/index')}">所有产品</a></li>
+        <li class="active"><a href="javascript:;">编辑产品</a></li>
+    </ul>
+    <div class="panel-group margin-top-20" id="accordion2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse-3">
+                    管理库存
+                </a>
+            </div>
+            <div id="collapse-3" class="panel-collapse">
+                <div class="panel-body">
+                    <table class="table" id="package-table">
+                        <thead>
+                        <tr>
+                            <th>产品编号</th>
+                            <th>价格</th>
+                            <th>库存</th>
+                            <th>容量</th>
+                            <th>单位</th>
+                            <th>包装</th>
+                            <th>纯度</th>
+                            <th>品牌</th>
+                            <th>备货期/天</th>
+                            <th>货架</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <foreach name="packages" item="vo">
+                            <tr>
+                                <td>
+                                    <input type="text" class="table-input-sm" name="product_no"
+                                           value="{$vo.product_no}">
+                                </td>
+                                <td><input type="text" class="table-input-sm" name="price" value="{$vo.price}">元</td>
+                                <td>
+                                    <input type="text" class="table-input-sm" name="inventory" value="{$vo.inventory}">
+                                </td>
+                                <td><input type="text" class="table-input-sm" name="pack" value="{$vo.pack}"></td>
+                                <td><input type="text" class="table-input-sm" name="unit" value="{$vo.unit}"></td>
+                                <td><input type="text" class="table-input-sm" name="packing_material"
+                                           value="{$vo.packing_material}"></td>
+                                <td><input type="text" class="table-input-sm" name="purity" value="{$vo.purity}"></td>
+                                <td><input type="text" class="table-input-sm" name="brand" value="{$vo.brand}"></td>
+                                <td><input type="text" class="table-input-sm" name="lead_time" value="{$vo.lead_time}">
+                                </td>
+                                <td>
+                                    <if condition="!empty($storage_places)">
+                                        <select name="storage_place" class="table-select-sm">
+                                            <foreach name="storage_places" item="place">
+                                                <php>
+                                                    $place_selected=$place['id']==$vo['storage_place']?"selected":"";
+                                                </php>
+                                                <option value="{$place.id}" {$place_selected}>{$place.name}</option>
+                                            </foreach>
+                                        </select>
+                                        <else/>
+                                        <a href="{:url('AdminStoragePlace/add')}">添加货架</a>
+                                    </if>
+                                </td>
+                                <td>
+                                    <select name="status" class="table-select-sm">
+                                        <option value="1">发布</option>
+                                        <php>$status_selected=$vo['status']==0?'selected':'';</php>
+                                        <option value="0" {$status_selected}>下架</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="hidden" name="id" value="{$vo.id}">
+                                    <input type="hidden" name="product_id" value="{$product.id}">
+                                    <a onclick="_packageSave(this)">保存</a>
+                                    <!--<a onclick="_packageInventoryChange(this)">出入库</a>-->
+                                    <a onclick="_packageDelete(this);">删除</a>
+                                </td>
+                            </tr>
+                        </foreach>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td colspan="8" style="text-align: center;">
+                                <a href="javascript:_packageAdd();">+ 添加</a>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                    <span class="form-required">*</span><span>备货期为0代表现货产品</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#collapse-1">产品详细</a>
+            </div>
+            <div id="collapse-1" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <form method="post" class="form-horizontal js-ajax-form" action="{:url('AdminProduct/editPost')}">
+                        <div class="form-group">
+                            <label for="js-categories-name-input" class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>分类</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" name="product[categories_name]"
+                                       id="js-categories-name-input" value="{:implode(' ',$product_categories)}"
+                                       readonly placeholder="请选择分类" onclick="doSelectCategory();">
+                                <input type="hidden" class="form-control" name="product[categories]"
+                                       id="js-categories-id-input"
+                                       value="{$product_category_ids}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="js-cas-input" class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>CAS号</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="js-cas-input" name="product[cas]"
+                                       value="{$product.cas}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="js-name-input" class="col-sm-2 control-label"><span
+                                    class="form-required"></span>英文名</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="js-name-input" name="product[name]"
+                                       value="{$product.name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="js-cn-name-input" class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>中文名</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="js-cn-name-input" name="product[cn_name]"
+                                       value="{$product.cn_name}">
+                            </div>
+                        </div>
+                        <!--
+                        <div class="control-group">
+                            <label class="control-label">MDL号</label>
+                            <div class="controls">
+                                <input type="text" name="product[mdl]" value="{$product.mdl}">
+                                <span class="form-required">*</span>
+                            </div>
+                        </div>
+                        -->
+                        <div class="form-group">
+                            <label for="js-mol-formula-input" class="col-sm-2 control-label"><span
+                                    class="form-required"></span>分子式</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="js-mol-formula-input"
+                                       name="product[mol_formula]" value="{$product.mol_formula}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="js-mol-weight-input" class="col-sm-2 control-label"><span class="form-required"></span>分子量</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="js-mol-weight-input"
+                                       name="product[mol_weight]" value="{$product.mol_weight}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="js-thumbnail-input" class="col-sm-2 control-label">
+                                <span class="form-required"></span>结构式
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="hidden" class="form-control" id="js-thumbnail-input"
+                                       name="product[thumbnail]" value="{$product.thumbnail}">
+                                <if condition="$product.thumbnail neq 'has'">
+                                    <if condition="empty($product.thumbnail)">
+                                        <img src="__TMPL__/public/assets/images/default-thumbnail.png"
+                                             id="js-thumbnail-input-preview"
+                                             width="135" style="cursor: pointer;border: 1px solid #ddd;display: none;"
+                                             onclick="uploadOneImage('图片上传','#js-thumbnail-input');"/>
+                                        <img src="http://www.chemium.cn/chemium/api/getCompoundPng/cas/{$product.cas}"
+                                             width="135" style="border: 1px solid #ddd;"
+                                             title="系统已有此产品数据，不用再上传了"
+                                             onerror="onCompoundImgError(this);"/>
+                                        <else/>
+                                        <img src="{:cmf_get_image_preview_url($product.thumbnail)}"
+                                             id="js-thumbnail-input-preview"
+                                             width="135" style="cursor: pointer;border: 1px solid #ddd;"
+                                             onclick="uploadOneImage('图片上传','#js-thumbnail-input');"/>
+                                    </if>
+                                    <else/>
+                                    <img src="http://www.chemium.cn/chemium/api/getCompoundPng/cas/{$product.cas}"
+                                         id="js-thumbnail-input-preview"
+                                         width="135" style="border: 1px solid #ddd;"
+                                         title="系统已有此产品数据，不用再上传了"
+                                    >
+                                </if>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-product-keywords" class="col-sm-2 control-label">
+                                <span class="form-required"></span>关键字
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control"
+                                       id="input-product-keywords"
+                                       name="product[keywords]" value="{$product.keywords}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-product-description" class="col-sm-2 control-label">
+                                <span class="form-required"></span>描述
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <textarea class="form-control" id="input-product-description"
+                                          name="product[description]">{$product.description}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-product-content" class="col-sm-2 control-label">
+                                <span class="form-required"></span>详细内容
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <script type="text/plain" id="input-product-content" name="product[content]">{$product.content}</script>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <input type="hidden" name="product[id]" value="{$product.id}">
+                                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
+                                <a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript">
+    //编辑器路径定义
+    var editorURL = GV.WEB_ROOT;
+</script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+
+        editorcontent = new baidu.editor.ui.Editor();
+        editorcontent.render('input-product-content');
+        try {
+            editorcontent.sync();
+        } catch (err) {
+        }
+
+    });
+    Wind.use('artDialog', 'noty3', function () {
+
+    });
+
+    function doSelectCategory() {
+        var selectedCategoriesId = $('#js-categories-id-input').val();
+        openIframeLayer("{:url('AdminCategory/select')}?ids=" + selectedCategoriesId, '请选择分类', {
+            area: ['700px', '400px'],
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                //do something
+
+                var iframeWin          = window[layero.find('iframe')[0]['name']];
+                var selectedCategories = iframeWin.confirm();
+                if (selectedCategories.selectedCategoriesId.length == 0) {
+                    layer.msg('请选择分类');
+                    return;
+                }
+                $('#js-categories-id-input').val(selectedCategories.selectedCategoriesId.join(','));
+                $('#js-categories-name-input').val(selectedCategories.selectedCategoriesName.join(' '));
+                //console.log(layer.getFrameIndex(index));
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+            }
+        });
+    }
+
+    function _packageSave(obj) {
+        var $this   = $(obj);
+        var $inputs = $this.parents('tr').find('input,select');
+        var data    = {};
+        $inputs.each(function () {
+            var $input = $(this);
+            var name   = $input.attr('name');
+            data[name] = $input.val();
+        });
+        $.ajax({
+            url: "{:url('AdminPack/savePost')}",
+            type: "POST",
+            dataType: 'JSON',
+            data: data,
+            success: function (data) {
+                if (data.code == 1) {
+                    new Noty({
+                        text: data.msg,
+                        type: 'success',
+                        layout: 'topCenter'
+                    }).show();
+                    if (data.data && data.data.id) {
+                        $this.parents('tr').find("[name='id']").val(data.data.id);
+                    }
+                }
+
+                if (data.code == 0) {
+                    new Noty({
+                        text: data.msg,
+                        type: 'error',
+                        layout: 'topCenter'
+                    }).show();
+                }
+            },
+            error: function () {
+
+            }
+
+        });
+    }
+
+    function _packageAdd() {
+        var tpl = $("#pack-tpl").html();
+        $('#package-table tbody').append(tpl);
+    }
+
+    function _packageInventoryChange(obj) {
+        var packId = $(obj).parents('tr').find("[name='id']").val();
+        openIframeLayer("{:url('AdminPack/inventoryChange')}?pack_id=" + packId, '出入库', {
+            area: ['800px', '400px'],
+            btn: ['确定', '取消'],
+            end: function () {
+                reloadPage(window);
+            }
+        });
+    }
+
+    function _packageDelete(obj) {
+        var $this     = $(obj);
+        var $id_input = $this.parents('tr').find("input[name='id']");
+        var id        = $id_input.val();
+
+        var _this = obj;
+        href      = $this.prop('href');
+        art.dialog({
+            title: false,
+            icon: 'question',
+            content: '确定要删除吗？',
+            follow: _this,
+            close: function () {
+                $this.focus();
+                ; //关闭时让触发弹窗的元素获取焦点
+                return true;
+            },
+            okVal: "确定",
+            ok: function () {
+                doDelete();
+            },
+            cancelVal: '关闭',
+            cancel: true
+        });
+
+        function doDelete() {
+            $.ajax({
+                url: "{:url('AdminPack/delete')}",
+                type: "POST",
+                dataType: 'JSON',
+                data: {id: id},
+                success: function (data) {
+                    if (data.code == 1) {
+                        $this.parents('tr').remove();
+                    }
+                },
+                error: function () {
+
+                }
+
+            });
+        }
+    }
+</script>
+<script>
+    var upload_path = '__UPLOAD__';
+    $(function () {
+        $('#js-cas-input').change(function () {
+            var cas = $(this).val();
+            if (cas.match(/\d+\-\d+\-\d/)) {
+                $.ajax({
+                    url: 'http://www.chemium.cn/chemium/api/getCasInfo/cas/' + cas,
+                    dataType: 'jsonp',
+                    type: "GET",
+                    success: function (data) {
+                        if (data.code == 0) return;
+                        $('#js-cn-name-input').val(data.data.cn_name);
+                        $('#js-name-input').val(data.data.name);
+                        $('#js-mol-formula-input').val(data.data.mol_formula);
+                        if (data.data.png) {
+                            $('#js-thumbnail-input').val('has');
+                            $('#js-thumbnail-input-preview').attr('src', 'http://www.chemium.cn/chemium/api/getCompoundPng/cas/' + cas);
+//                            $.ajax({
+//                                url: "{:url('AdminProduct/getPng')}?cas=" + cas,
+//                                dataType: 'json',
+//                                type: "POST",
+//                                success: function (data) {
+//                                    $('#js-thumbnail-img').attr('src', upload_path + data.data.file).show();
+//                                    $('#js-thumbnail-input').val(data.data.file);
+//                                }
+//                            });
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

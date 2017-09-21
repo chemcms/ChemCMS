@@ -1,0 +1,72 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap">
+    <table class="table" style="margin-bottom: 0;">
+        <tr>
+            <th colspan="4" style="text-align: center;border-top:none;">
+                XXX公司出库单
+            </th>
+        </tr>
+        <tr>
+            <th width="90">
+                出库单号:
+            </th>
+            <td>{$stock_out.stock_out_sn}</td>
+            <th width="90">
+                出库类型:
+            </th>
+            <td>{$stock_out.category_name}</td>
+        </tr>
+        <tr>
+            <th width="90">
+                出库时间:
+            </th>
+            <td colspan="3">{:date('Y-m-d H:i:s')}</td>
+        </tr>
+        <tr>
+            <th width="90">
+                操作人:
+            </th>
+            <td colspan="3">{$stock_out.user.user_login} {$stock_out.user.mobile}</td>
+        </tr>
+        <tr>
+            <th width="90">
+                备注:
+            </th>
+            <td colspan="3">{$stock_out.remark}</td>
+        </tr>
+    </table>
+    <table class="table table-bordered">
+        <tr>
+            <th colspan="6" style="text-align: center;">产品清单</th>
+        </tr>
+        <tr>
+            <th>序号</th>
+            <th>产品名</th>
+            <th>CAS|货号</th>
+            <th>纯度</th>
+            <td>包装</td>
+            <th style="white-space: nowrap;">数量</th>
+        </tr>
+        <notempty name="stock_out_items">
+
+            <foreach name="stock_out_items" item="vo" key="k">
+                <tr>
+                    <td>{$k+1}</td>
+                    <td>{$vo.cn_name}</td>
+                    <td><span style="white-space: nowrap;">{$vo.cas}<br>{$vo.product_no}</span></td>
+                    <td>{$vo.purity}</td>
+                    <td>{$vo.pack}{$vo.unit}/{$vo.packing_material}</td>
+                    <td>
+                        {$vo.quantity}
+                    </td>
+                </tr>
+            </foreach>
+        </notempty>
+    </table>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>window.print();</script>
+</body>
+</html>

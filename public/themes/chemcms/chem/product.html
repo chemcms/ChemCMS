@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CAS:{$product.cas}|{$product.name}|{$product.cn_name}|{$site_info.site_name}</title>
+    <meta name="keywords" content="{$product.cas},{$product.name},{$product.cn_name},{$product.keywords}"/>
+    <meta name="description" content="{$product.description}">
+    <include file="public@head"/>
+    <style>
+        #article_content img {
+            height: auto !important
+        }
+
+        #article_content {
+            word-wrap: break-word;
+        }
+
+        .btn {
+            margin-top: 33px;
+        }
+
+        .add-product-to-cart-dialog dt.product-img-wrapper {
+            width: 183px;
+            float: left;
+            border: 1px #ddd solid;
+        }
+
+        .add-product-to-cart-dialog .product-contents {
+            overflow: hidden;
+            padding: 0 20px;
+        }
+
+        .add-product-to-cart-dialog dt .product-img {
+            width: 180px;
+            height: 180px;
+            line-height: 180px;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .add-product-to-cart-dialog .product-details dd, .add-product-to-cart-dialog .product-details dt {
+            line-height: 30px;
+        }
+
+        .add-product-to-cart-dialog .product-details dt {
+            width: 70px;
+            text-align: right;
+            float: left;
+            border: none;
+            color: #555;
+            padding: 5px 0;
+        }
+
+        .add-product-to-cart-dialog .product-details dd {
+            padding: 5px 0;
+        }
+
+        .add-product-to-cart-dialog .product-details dd .amount {
+            border: 1px #ddd solid;
+            float: left;
+        }
+
+        .add-product-to-cart-dialog .product-details dd span {
+            padding: 0 10px;
+        }
+    </style>
+</head>
+<body class="body-white">
+<include file="public@nav"/>
+<div class="container tc-main">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="tc-box first-box article-box">
+                <h3><b>{$product.cn_name}</b></h3>
+                <div class="article-infobox">
+                    <span>{:date("Y-m-d H:i",$product.create_time)}</span>
+
+                </div>
+                <hr>
+                <div>
+                    <img src="http://chemium.cn/chemium/api/getCompoundPng/cas/{$product.cas}" class="img-responsive"
+                         alt="{$product.cn_name}" style="float: left;"
+                         onerror="javascript:this.src='__TMPL__/public/assets/images/compound_default.png'">
+                    <div style="float: left;line-height: 2em;max-width: 400px;">
+                        <div><b>CAS号：</b>{$product.cas}</div>
+                        <br>
+                        <div><b>名&nbsp;&nbsp;&nbsp;&nbsp;称：</b>{$product.name}</div>
+                        <br>
+                        <div><b>化学式：</b>{$product.mol_formula}</div>
+                        <br>
+                        <div><b>分子量：</b>{$product.mol_weight}</div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <table id="js-ul-list-rule" class="js-ul-list-public table table-striped table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th>品牌</th>
+                        <th>货号</th>
+                        <th>规格</th>
+                        <th>纯度</th>
+                        <th>价格/元</th>
+                        <th>货期</th>
+                        <!--<th></th>-->
+                    </tr>
+                    </thead>
+                    <if condition="!empty($packs)&&count($packs) gt 0">
+
+                        <foreach name="packs" item="vo">
+                            <tr>
+                                <td>
+                                    {$vo.brand}
+                                </td>
+                                <td>{$vo.product_no}</td>
+                                <td>
+                                    {$vo.pack}{$vo.unit}
+                                </td>
+
+                                <td>{$vo.purity}</td>
+                                <td>
+                                    <eq name="vo.price" value="0">咨询
+                                        <else/>
+                                        {$vo.price}
+                                    </eq>
+                                </td>
+                                <td>
+                                    <eq name="vo.inventory" value="0">{$vo.lead_time}天
+                                        <else/>
+                                        现货
+                                    </eq>
+                                </td>
+                                <!--
+                                <td>
+                                    <a href="{:url('chem/product/addToCart',array('id'=>$vo['id'],'buy_now'=>1))}"
+                                       title="立即购买" class="js-ajax-btn">立即购买</a>
+                                    <a href="{:url('chem/product/addToCart',array('id'=>$vo['id']))}" title="加入购物车"
+                                       class="js-ajax-btn" data-refresh="1"><i class="fa fa-shopping-cart"></i></a>
+                                </td>
+                                -->
+                            </tr>
+                        </foreach>
+                        <else/>
+                        <tr>
+                            <td colspan="7" style="text-align: center;">对不起，暂无存货！</td>
+                        </tr>
+                    </if>
+                </table>
+                <div id="article_content">
+                    {$product.content}
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col-md-3">
+            <div class="tc-box first-box">
+                <div class="headtitle">
+                    <h4>分享</h4>
+                </div>
+
+                <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#"
+                                                                                                  class="bds_weixin"
+                                                                                                  data-cmd="weixin"
+                                                                                                  title="分享到微信"></a><a
+                        href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="#" class="bds_mail"
+                                                                                       data-cmd="mail"
+                                                                                       title="分享到邮件分享"></a><a href="#"
+                                                                                                              class="bds_print"
+                                                                                                              data-cmd="print"
+                                                                                                              title="分享到打印"></a><a
+                        href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a><a href="#" class="bds_copy"
+                                                                                              data-cmd="copy"
+                                                                                              title="分享到复制网址"></a></div>
+                <script>window._bd_share_config = {
+                    "common": {
+                        "bdSnsKey": {},
+                        "bdText": "",
+                        "bdMini": "2",
+                        "bdMiniList": ["mshare", "weixin", "mail", "sqq", "tsina", "youdao", "evernotecn", "copy", "print", "renren", "fbook", "twi", "linkedin"],
+                        "bdPic": "",
+                        "bdStyle": "1",
+                        "bdSize": "24"
+                    }, "share": {}
+                };
+                with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+
+                <!--
+                <br>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <p class="list-group-item-text"><b>Tel:021-80370039</b></p>
+                        <p class="list-group-item-text"><b>Email:service@chemcms.com</b></p>
+                    </a>
+                    <br>
+                    <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2152147048&site=qq&menu=yes"><img
+                            border="0" src="http://wpa.qq.com/pa?p=2:2152147048:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+                </div>
+                -->
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+</div>
+
+<div>
+    <div class="add-product-to-cart-dialog" id="js-add-product-to-cart-dialog" style="width: 600px;display: none;">
+        <dl style="margin: 5px;">
+            <dt class="product-img-wrapper">
+            <div class="product-img">
+                <img class="img-responsive" src="http://chemium.cn/chemium/api/getCompoundPng/cas/{$product.cas}">
+            </div>
+            </dt>
+            <dd class="product-contents">
+                <div class="product-name">
+                    <h4>
+                        <a>1-丁基-3-甲基咪唑六氟磷酸盐</a>
+                        <i style="font-size: 12px;">（174501-64-5）</i>
+                    </h4>
+                    <p>
+                        <span>纯度/指标：97%</span>
+                        <span>最小起订量：1瓶</span>
+                    </p>
+                </div>
+                <dl class="product-details">
+                    <dt>商品价格：</dt>
+                    <dd>
+                        <strong>￥0000.00</strong><span>（不含运费）</span>
+                    </dd>
+                    <dt>商品纯度：</dt>
+                    <dd>
+                        <a href="javascript:;" class="spec">97%</a>
+                    </dd>
+                    <dt>商品规格：</dt>
+                    <dd>
+                        <a href="javascript:;" class="spec">100.00g/瓶</a>
+                    </dd>
+                    <dt>购买数量：</dt>
+                    <dd>
+                        <div class="amount">
+                            <a href="javascript:;">-</a>
+                            <input type="text" style="width: 50px;">
+                            <input type="hidden" value="1">
+                            <input type="hidden" value="1">
+                            <a href="javascript:;">+</a>
+                        </div>
+                        <span>瓶</span>
+                    </dd>
+                </dl>
+            </dd>
+        </dl>
+    </div>
+
+</div>
+<include file="public@footer"/>
+<include file="public@scripts"/>
+<script>
+    function _buyNow() {
+        Wind.css("layer");
+        Wind.use("layer", function () {
+            layer.open({
+                type: 1,
+                area: ['auto', 'auto'],
+                move: false,
+                content: $('#js-add-product-to-cart-dialog'),
+                btn: ['加入购物车'],
+                anim: false,
+                yes: function () {
+
+                }
+            });
+        });
+    }
+
+    function _addToCart() {
+
+
+    }
+
+</script>
+</body>
+</html>

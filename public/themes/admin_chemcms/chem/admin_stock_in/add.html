@@ -1,0 +1,86 @@
+<include file="public@header"/>
+</head>
+<body>
+
+<div class="wrap" style="padding: 20px;">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('AdminStockIn/index')}">入库记录</a></li>
+        <li class="active"><a href="{:url('AdminStockIn/add')}">产品入库</a></li>
+    </ul>
+
+
+
+
+
+    <form method="post" class="form-horizontal js-ajax-form margin-top-20"
+          action="{:url('AdminStockIn/inventoryChangePost')}">
+        <!--
+        <div class="form-group">
+            <label for="input-is_in" class="col-sm-2 control-label">出入库<span class="form-required">*</span></label>
+            <div class="col-md-6 col-sm-10">
+                <select class="form-control" name="is_in" id="input-is_in">
+                    <option value="1">入库</option>
+                    <option value="0">出库</option>
+                </select>
+            </div>
+        </div>
+        -->
+        <div class="form-group">
+            <label for="input-inventory_change" class="col-sm-2 control-label">
+                产品规格<span class="form-required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-10">
+                <textarea class="form-control" type="text" required value=""
+                          placeholder="产品规格" onclick="doSelectPack();" id="js-pack-name-input"
+                          readonly></textarea>
+                <input class="form-control" type="hidden" value="" name="pack_id"
+                       id="js-pack-id-input"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-inventory_change" class="col-sm-2 control-label">
+                数量<span class="form-required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-inventory_change" name="inventory_change">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-remark" class="col-sm-2 control-label">备注</label>
+            <div class="col-md-6 col-sm-10">
+                <textarea class="form-control" name="remark" id="input-remark"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary js-ajax-submit">确定</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+    function doSelectPack() {
+        parent.openIframeLayer("{:url('AdminStockIn/selectPack')}", '请选择产品规格', {
+            area: ['95%', '95%'],
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                //do something
+
+                var iframeWin          = parent.window[layero.find('iframe')[0]['name']];
+                var selectedPack = iframeWin.confirm();
+                if (!selectedPack.id) {
+                    layer.msg('请选择产品规格！');
+                    return;
+                }
+
+                $('#js-pack-id-input').val(selectedPack.id);
+                $('#js-pack-name-input').val(selectedPack.name);
+                //console.log(layer.getFrameIndex(index));
+                parent.layer.close(index); //如果设定了yes回调，需进行手工关闭
+            }
+        });
+    }
+</script>
+</body>
+</html>

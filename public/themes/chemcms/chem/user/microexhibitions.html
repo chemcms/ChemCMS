@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{$site_name}</title>
+<tc_include file="Public:head" />
+<style>
+	.table td,.table tr{
+		vertical-align: middle !important;
+	}
+</style>
+</head>
+
+<body class="body-white" id="top">
+	<tc_include file="Public:nav" />
+
+	<div class="container tc-main">
+		<div class="row">
+			<div class="col-md-3">
+				<tc_include file="Public:usernav" />
+			</div>
+			<div class="col-md-9">
+				<div class="tabs">
+					<ul class="nav nav-tabs">
+						<li class="active"><a><i class="fa fa-star"></i> 我的微展览</a></li>
+						<li><a href="{:U('art/user/microexhibition_change_coupons')}">微展览更换券</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="one">
+							<br>
+							<table class="table table-bordered table-striped table-hover">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>展览名称</th>
+										<th>开始时间</th>
+										<th>到期时间</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<foreach name="user_exhibitions" item="vo">
+									<tr>
+										<td>{$vo.id}</td>
+										<td>{$vo.user_exhibition_name}</td>
+										<td>{:date('Y-m-d H:i',$vo['start_time'])}</td>
+										<td>{:date('Y-m-d H:i',$vo['expire_time'])}</td>
+										<td>
+											<a class="btn btn-primary btn-sm" href="{:U('art/user/microexhibition_items',array('id'=>$vo['id']))}" target="_blank">作品列表</a>
+											<if condition="$vo['expire_time'] gt time()">
+											<a class="btn btn-success btn-sm">正在展览</a>
+											</if>
+										</td>
+									</tr>
+									</foreach>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<tc_include file="Public:footer" />
+
+	</div>
+
+	<tc_include file="Public:scripts" />
+</body>
+</html>

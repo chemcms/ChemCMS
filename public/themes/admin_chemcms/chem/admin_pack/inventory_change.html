@@ -1,0 +1,41 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap" style="padding: 20px;">
+    <form method="post" class="form-horizontal js-ajax-form" action="{:url('AdminPack/inventoryChangePost')}">
+        <!--
+        <div class="form-group">
+            <label for="input-is_in" class="col-sm-2 control-label">入库<span class="form-required">*</span></label>
+            <div class="col-md-6 col-sm-10">
+                <select class="form-control" name="is_in" id="input-is_in">
+                    <option value="1">入库</option>
+                </select>
+            </div>
+        </div>
+        -->
+        <div class="form-group">
+            <label for="input-inventory_change" class="col-sm-2 control-label">
+                数量<span class="form-required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-inventory_change" name="inventory_change">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-remark" class="col-sm-2 control-label">备注</label>
+            <div class="col-md-6 col-sm-10">
+                <textarea class="form-control" name="remark" id="input-remark"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="pack_id" value="{$pack_id}">
+                <input type="hidden" name="is_in" value="1">
+                <button type="submit" class="btn btn-primary js-ajax-submit">确定</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

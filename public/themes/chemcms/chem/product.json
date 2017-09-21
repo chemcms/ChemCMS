@@ -1,0 +1,8 @@
+{
+    "name": "化学产品详细页",
+    "action": "chem/Product/index",
+    "description": "化学产品详细页",
+    "order": 10.0,
+    "more": {
+    }
+}

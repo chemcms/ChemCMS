@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$site_info.site_name}</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content="">
+    <include file="public@head"/>
+    <style>
+        .tc-gridbox .item-image img {
+            width: 100%;
+        }
+
+        .tc-gridbox .item-image {
+            border-bottom: #eee solid 1px;
+        }
+
+        .tc-gridbox .header .head-footer {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body class="body-white">
+<include file="public@nav"/>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="__ROOT__/">首页</a></li>
+        <li class="active">{$category.name}</li>
+    </ol>
+    <div class="row">
+        <div class="col-md-9" style="padding-left: 5px;padding-right: 5px;">
+            <php>
+                $where=[
+                'product.create_time'=>['egt',0]
+                ];
+            </php>
+            <chem:products item="vo" field="*" where="$where" order="product.create_time DESC" page="20"
+                           relation=""
+                           categoryIds="$category.id"
+                           returnVarName="products_data">
+                <div class="tc-gridbox-container">
+                    <div class="tc-gridbox">
+                        <div class="header">
+                            <div class="item-image">
+                                <a href="{:url('chem/Product/index',array('id'=>$vo.id,'cid'=>$vo.category_id))}">
+                                    <img src="http://www.chemium.cn/chemium/api/getCompoundPng/cas/{$vo.cas|default=''}"
+                                         class="img-responsive" alt=""
+                                         onerror="javascript:this.src='__TMPL__/public/assets/images/compound_default.png'">
+                                </a>
+                            </div>
+                            <div class="head-footer">
+                                <h3 class="pull-center" style="font-size: 12px;white-space: nowrap;">
+                                    <b>{$vo.cn_name|default=''}</b></h3>
+                                <h3 class="pull-center" style="font-size: 12px;white-space: nowrap;">
+                                    CAS#:{$vo.cas|default=''}</h3>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </chem:products>
+            <div class="clearfix"></div>
+            <ul class="pagination" style="margin: 0 10px;"><page/></ul>
+        </div>
+        <div class="col-md-3">
+            <div class="tc-box first-box">
+                <div class="headtitle">
+                    <h4>分享</h4>
+                </div>
+
+                <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="#" class="bds_mail" data-cmd="mail" title="分享到邮件分享"></a><a href="#" class="bds_print" data-cmd="print" title="分享到打印"></a><a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a><a href="#" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a></div>
+                <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["mshare","weixin","mail","sqq","tsina","youdao","evernotecn","copy","print","renren","fbook","twi","linkedin"],"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+                <!--
+                <br>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <p class="list-group-item-text"><b>Tel:021-80370039</b></p>
+                        <p class="list-group-item-text"><b>Email:service@chemcms.com</b></p>
+                    </a>
+                    <br>
+                    <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2152147048&site=qq&menu=yes" ><img border="0" src="http://wpa.qq.com/pa?p=2:2152147048:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+                </div>
+                -->
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+<include file="public@footer"/>
+<!-- JavaScript -->
+<include file="public@scripts"/>
+</body>
+</html>

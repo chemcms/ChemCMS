@@ -1,0 +1,98 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('AdminStockOut/index')}">出库单</a></li>
+        <li><a href="{:url('AdminStockOut/add')}">产品出库</a></li>
+        <li class="active"><a href="{:url('AdminStockOut/logs')}">出库记录</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="post" action="{:url('AdminStockOut/logs')}">
+        ID：
+        <input type="text" class="form-control" name="stock_out_id" style="width:100px;"
+               value="{:input('param.stock_out_id')}"
+               placeholder="出库单ID">
+        单号：
+        <input type="text" class="form-control" name="stock_out_sn" style="width:100px;"
+               value="{:input('param.stock_out_sn')}"
+               placeholder="出库单号">
+        CAS：
+        <input type="text" class="form-control" name="cas" style="width:100px;" value="{:input('param.cas')}"
+               placeholder="CAS号">
+        关键字：
+        <input type="text" class="form-control" name="keyword" style="width: 200px;" value="{:input('param.keyword')}"
+               placeholder="化合物名称/分子式">
+        <input type="submit" class="btn btn-primary" value="搜索"/>
+        <a class="btn btn-danger" href="{:url('AdminStockOut/logs')}">清空</a>
+    </form>
+    <php>
+        $status=['0'=>'已出库','1'=>'未出库'];
+    </php>
+    <table class="table table-hover table-bordered table-list margin-top-20">
+        <thead>
+        <tr>
+            <th width="50">ID</th>
+            <th>出库单号</th>
+            <th>产品名</th>
+            <th style="white-space: nowrap;min-width: 80px">CAS#|货号</th>
+            <th style="white-space: nowrap;width: 80px;">规格|纯度</th>
+            <th style="white-space: nowrap;width: 15px;">数量</th>
+            <th style="white-space: nowrap;width: 20px;">出库类型</th>
+            <th style="white-space: nowrap;width:130px;">出库时间</th>
+            <th style="white-space: nowrap;width:60px;">状态</th>
+            <th style="white-space: nowrap;">备注</th>
+            <th style="white-space: nowrap;">操作人</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="stock_out_items" item="vo">
+            <tr>
+                <td>{$vo.stock_out_id}</td>
+                <td><a href="javascript:parent.openIframeLayer('{:url('AdminStockOut/edit',array('id'=>$vo['stock_out']['id']))}?no_tab=1','编辑出库单',{});">{$vo.stock_out_sn}</a></td>
+                <td>{$vo.pack.product.cn_name}</td>
+                <td>{$vo.pack.product.cas}<br>{$vo.pack.product_no}</td>
+                <td style="white-space: nowrap;">{$vo.pack.pack}{$vo.pack.unit}/{$vo.pack.packing_material}<br>{$vo.pack.purity}</td>
+                <td>{$vo.quantity}</td>
+                <td>
+                    {$vo.stock_out.category_name}
+                </td>
+                <td>{:date('Y-m-d H:i',$vo['stock_out']['create_time'])}</td>
+                <td>{$status[$vo.stock_out.status]}</td>
+                <td>
+                    {$vo.stock_out.remark}
+                </td>
+                <td>{$vo.stock_out.user.user_login}</td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    <ul class="pagination">{$page}</ul>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+    function doSelectCustomer() {
+        var selectedCategoriesId = $('#js-categories-id-input').val();
+        parent.openIframeLayer("{:url('crm/AdminCustomer/select')}?ids=" + selectedCategoriesId, '请选择客户', {
+            area: ['95%', '90%'],
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                //do something
+
+                var iframeWin        = parent.window[layero.find('iframe')[0]['name']];
+                var selectedCustomer = iframeWin.confirm();
+                if (!selectedCustomer.id) {
+                    parent.layer.msg('请选择客户');
+                    return;
+                }
+                $('#js-customer-id-input').val(selectedCustomer.id);
+                $('#js-customer-name-input').val(selectedCustomer.name);
+                $('#js-submit').click();
+                //console.log(layer.getFrameIndex(index));
+                parent.layer.close(index); //如果设定了yes回调，需进行手工关闭
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

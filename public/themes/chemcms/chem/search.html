@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>搜索 {$site_info.site_name}</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="">
+    <include file="public@head" />
+    <style>
+		.tc-gridbox .item-image img{
+			width:100%;
+		}
+		.tc-gridbox .item-image{
+			border-bottom: #ddd solid 1px;
+		}
+		.tc-gridbox .header .head-footer{
+			padding:5px;
+		}
+	</style>
+</head>
+<body class="body-white">
+<include file="public@nav" />
+<div class="container tc-main">
+    <div class="row">
+		<div class="col-md-9">
+			<volist name="products" id="vo">
+			<div class="tc-gridbox-container">
+				<div class="tc-gridbox">
+                       <div class="header">
+                      	<div class="item-image">
+                      		<a href="{:cmf_url('chem/Product/index',array('id'=>$vo['id']))}">
+								<img src="http://www.chemium.cn/chemium/api/getCompoundPng/cas/{$vo.cas}" class="img-responsive" alt="" onerror="javascript:this.src='__TMPL__/public/assets/images/compound_default.png'">
+							</a>
+						</div>
+                           <div class="head-footer">
+                        	<h3 class="pull-left">CAS#: {$vo.cas}</h3>
+							<div class="clearfix"></div>
+						</div>
+                       </div>
+				</div>
+			</div>
+			</volist>
+			<div class="clearfix"></div>
+			<ul class="pagination">{$page}</ul>
+		</div>
+		<div class="col-md-3">
+			<div class="tc-box first-box">
+			<div class="headtitle">
+          		<h2>分享</h2>
+          	</div>
+			<div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqf" data-cmd="tqf" title="分享到腾讯朋友"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a></div>
+			<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"32"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=86835285.js?cdnversion='+~(-new Date()/36e5)];</script>
+        	</div>
+
+		</div>
+    </div>
+
+
+</div>
+<include file="public@footer" />
+
+<!-- JavaScript -->
+<include file="public@scripts" />
+</body>
+</html>

@@ -1,0 +1,100 @@
+<include file="public@header"/>
+<style>
+    .table-input-sm {
+        width: 60px !important;
+        padding: 2px !important;
+        margin: 0 !important;
+    }
+
+    .table-select-sm {
+        margin-bottom: 0;
+        width: 100px;
+    }
+
+    a {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    function onCompoundImgError(obj) {
+        $(obj).hide();
+        $('#js-thumbnail-input-preview').show();
+    }
+</script>
+
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <div class="panel-group " id="accordion2">
+        <div class="panel panel-default">
+
+            <div id="collapse-3" class="panel-collapse">
+                <div class="panel-body">
+                    <table class="table" id="package-table">
+                        <thead>
+                        <tr>
+                            <th>品牌</th>
+                            <th>产品编号</th>
+                            <th>价格</th>
+                            <th>数量</th>
+                            <th>包装</th>
+                            <th>包装形式</th>
+                            <th>纯度</th>
+                            <th>备货期</th>
+                            <th>位置</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <foreach name="packages" item="vo">
+                            <tr>
+                                <td>{$vo.brand}</td>
+                                <td>
+                                    {$vo.product_no}
+                                </td>
+                                <td>￥{$vo.price}</td>
+                                <td>
+                                    <empty name="vo.inventory">
+                                        缺货
+                                        <else/>
+                                        {$vo.inventory}
+                                    </empty>
+
+                                </td>
+                                <td>{$vo.pack}{$vo.unit}</td>
+                                <td>{$vo.packing_material}</td>
+                                <td>{$vo.purity}</td>
+                                <td>
+                                    <empty name="vo.inventory">
+                                        {$vo.lead_time}天
+                                        <else/>
+                                        现货
+                                    </empty>
+                                </td>
+                                <td>
+                                    <if condition="isset($storage_places[$vo['storage_place']])">
+                                        {$storage_places[$vo['storage_place']]['name']}
+                                        <else/>
+                                        未指定
+                                    </if>
+                                </td>
+                                <!--<td>
+                                    <empty name="vo.status">
+                                        下架
+                                        <else/>
+                                        发布
+                                    </empty>
+                                </td>-->
+                            </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('AdminStockIn/index')}">产品入库</a></li>
+        <li class="active"><a href="{:url('AdminStockIn/logs')}">入库记录</a></li>
+    </ul>
+    <form method="post" class="js-ajax-form margin-top-20" action="">
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>
+                    CAS
+                </th>
+                <th>
+                    产品名称
+                </th>
+                <th>
+                    产品规格
+                </th>
+                <th>
+                    纯度
+                </th>
+                <th>
+                    数量
+                </th>
+                <th>入库时间</th>
+                <th>
+                    操作人
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="logs" item="vo">
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.pack.product.cas}</td>
+                    <td>{$vo.pack.product.cn_name}<br>{$vo.pack.product.name}</td>
+                    <td>
+                        {$vo.pack.pack}{$vo.pack.unit}/{$vo.pack.packing_material}
+                    </td>
+                    <td>
+                        {$vo.pack.purity}
+                    </td>
+                    <td>
+                        {$vo.inventory_change}
+                    </td>
+                    <td>
+                        {:date('Y-m-d H:i:s',$vo.create_time)}
+                    </td>
+                    <td>
+                        {$vo.user.user_login}
+                        <!--<notempty name="vo.user.user_email">
+                            邮箱:{$vo.user.user_email}<br>
+                        </notempty>-->
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <ul class="pagination">{$page|default=''}</ul>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

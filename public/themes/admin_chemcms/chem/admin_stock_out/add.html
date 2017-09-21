@@ -1,0 +1,37 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('AdminStockOut/index')}">出库单</a></li>
+        <li class="active"><a href="{:url('AdminStockOut/add')}">产品出库</a></li>
+        <li><a href="{:url('AdminStockOut/logs')}">出库记录</a></li>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('AdminStockOut/addPost')}">
+        <div class="form-group">
+            <label for="input-category_name" class="col-sm-2 control-label">出库类型<span
+                    class="form-required">*</span></label>
+            <div class="col-md-6 col-sm-10">
+                <select class="form-control" name="category_name" id="input-category_name">
+                    <option value="销售订单">销售订单</option>
+                    <option value="内部领料">内部领料</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-remark" class="col-sm-2 control-label">备注</label>
+            <div class="col-md-6 col-sm-10">
+                <textarea class="form-control" name="remark" id="input-remark"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary js-ajax-submit">创建</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

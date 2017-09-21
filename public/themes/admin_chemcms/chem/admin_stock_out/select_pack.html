@@ -1,0 +1,165 @@
+<include file="public@header"/>
+<style>
+    .cas-thumbnail {
+        width: 80px;
+        height: 80px;
+    }
+
+    .table td, .table th {
+        text-align: center;;
+    }
+
+    .js-add-to-stock-out-btn {
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <form class="well form-inline" method="post" action="">
+        CAS：
+        <input type="text" class="form-control" name="cas" style="width:100px;" value="{:input('param.cas')}"
+               placeholder="请输入CAS">
+        关键字：
+        <input type="text" class="form-control" name="keyword" style="width: 200px;" value="{:input('param.keyword')}"
+               placeholder="请输入化合物名称/分子式">
+        <input type="submit" class="btn btn-primary" value="搜索"/>
+        <a class="btn btn-danger" href="{:url('AdminProduct/select')}?order_draft_id={}">清空</a>
+    </form>
+    <form class="js-ajax-form" action="" method="post">
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th width="50">序号</th>
+                <th width="400">名称</th>
+                <th width="100">CAS#|货号</th>
+                <th width="130">品牌</th>
+                <th>包装|纯度</th>
+                <th>价格/元</th>
+                <th width="70">库存量</th>
+                <th>备货期/天</th>
+                <th width="100">数量</th>
+            </tr>
+            </thead>
+            <php>
+                $status=array("1"=>"上架","0"=>"下架");
+                $top_status=array("1"=>"置顶","0"=>"");
+                $recommend_status=array("1"=>"推荐","0"=>"");
+            </php>
+            <foreach name="packs" item="vo">
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.product.cn_name}<br>{$vo.product.name}</td>
+                    <td>{$vo.product.cas}<br>{$vo.product_no}</td>
+                    <td>{$vo.brand}</td>
+                    <td>{$vo.pack}{$vo.unit}<br>{$vo.purity}</td>
+                    <td>{$vo.price}</td>
+                    <td>{$vo.inventory}</td>
+                    <td>{$vo.lead_time}</td>
+                    <td>
+                        <if condition="empty($order_draft_items['chem_product_pack'.$vo['id']]['goods_quantity'])">
+                            <input class="form-control input-sm text-center js-add-to-stock-out-input" value="1"
+                                   data-pack="{$vo.id}">
+                            <else/>
+                            <input class="form-control input-sm text-center js-add-to-stock-out-input"
+                                   value="{$order_draft_items['chem_product_pack'.$vo['id']]['goods_quantity']}"
+                                   data-pack="{$vo.id}">
+                        </if>
+                        <a class="js-add-to-stock-out-btn" data-pack="{$vo.id}">添加</a>
+                    </td>
+                </tr>
+            </foreach>
+        </table>
+        <ul class="pagination">{$page}</ul>
+    </form>
+</div>
+<img id="cas-thumbnail-bigger"
+     style="position: fixed;top: 50%;left: 50%;width: 300px;height: 300px;margin-left: -150px;margin-top: -150px;display: none;box-shadow: 0px 0px 20px rgba(0,0,0,0.2);"/>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+    Wind.use('noty3', function () {
+
+    });
+    $(function () {
+        var $cas_thumbnail_bigger = $('#cas-thumbnail-bigger');
+        $('.cas-thumbnail').hover(function () {
+            $cas_thumbnail_bigger.attr('src', $(this).attr('src'));
+            $cas_thumbnail_bigger.show();
+        }, function () {
+            $cas_thumbnail_bigger.hide();
+        });
+
+        $('.js-add-to-stock-out-btn').click(function () {
+            var $this    = $(this);
+            var $input   = $this.siblings('input');
+            var quantity = $input.val();
+            var packId   = $this.data('pack');
+
+            addToStockOut(quantity, packId);
+
+        });
+
+        $('.js-add-to-stock-out-input').keydown(function (e) {
+            if (e.keyCode == 13) {
+                var $this    = $(this);
+                var quantity = $this.val();
+                var packId   = $this.data('pack');
+
+                addToStockOut(quantity, packId);
+            }
+        });
+
+
+    });
+
+    function addToStockOut(quantity, packId) {
+        $.ajax({
+            url: "{:url('chem/AdminStockOut/addToStockOut')}",
+            type: "post",
+            dataType: 'json',
+            data: {stock_out_id: '{$stock_out_id}', quantity: quantity, pack_id: packId},
+            success: function (data) {
+                if (data.code == 1) {
+                    new Noty({
+                        text: data.msg,
+                        type: 'success',
+                        layout: 'topCenter',
+                        animation: {
+                            open: 'animated bounceInDown', // Animate.css class names
+                            close: 'animated bounceOutUp', // Animate.css class names
+                        },
+                        callbacks: {
+                            afterClose: function () {
+                            }
+                        }
+                    }).show();
+                }
+                if (data.code == 0) {
+                    new Noty({
+                        text: data.msg,
+                        type: 'error',
+                        layout: 'topCenter',
+                        animation: {
+                            open: 'animated bounceInDown', // Animate.css class names
+                            close: 'animated bounceOutUp', // Animate.css class names
+                        },
+                        callbacks: {
+                            afterClose: function () {
+                            }
+                        }
+                    }).show();
+                }
+            },
+            error: function () {
+
+            },
+            complete: function () {
+
+            }
+
+        });
+    }
+
+</script>
+</body>
+</html>

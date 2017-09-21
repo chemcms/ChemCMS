@@ -1,0 +1,44 @@
+<include file="public@header"/>
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:url('AdminStoragePlace/index')}">所有货架</a></li>
+			<li><a href="{:url('AdminStoragePlace/add')}">添加货架</a></li>
+		</ul>
+		<form class="js-ajax-form margin-top-20" action="" method="post">
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th>货架</th>
+						<th>库房</th>
+						<th>备注</th>
+						<th width="100">{:lang('ACTIONS')}</th>
+					</tr>
+				</thead>
+				<foreach name="storage_places" item="vo">
+				<tr>
+					<td>{$vo.name}</td>
+					<td>{$vo.warehouse.name|default='未指定库房'}</td>
+					<td>{$vo.remark}</td>
+					<td>
+						<a href="{:url('AdminStoragePlace/edit',array('id'=>$vo['id']))}">{:lang('EDIT')}</a>
+						<a href="{:url('AdminStoragePlace/delete',array('id'=>$vo['id']))}" class="js-ajax-delete">{:lang('DELETE')}</a>
+					</td>
+				</tr>
+				</foreach>
+				<tfoot>
+					<tr>
+						<th>货架</th>
+						<th>库房</th>
+						<th>备注</th>
+						<th width="100">{:lang('ACTIONS')}</th>
+					</tr>
+				</tfoot>
+			</table>
+			<div class="pagination">{$page|default=''}</div>
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>
