@@ -32,15 +32,13 @@ ChemCMS Free
 chemcms  根目录
 ├─api                   api目录(核心版不带)
 ├─app                   应用目录
-│  ├─portal             门户应用目录
+│  ├─chem               化学应用目录
 │  │  ├─config.php      应用配置文件
-│  │  ├─common.php      模块函数文件
 │  │  ├─controller      控制器目录
 │  │  ├─model           模型目录
 │  │  └─ ...            更多类库目录
 │  ├─ ...               更多应用
 │  ├─command.php        命令行工具配置文件
-│  ├─common.php         应用公共(函数)文件
 │  ├─config.php         应用(公共)配置文件
 │  ├─database.php       数据库配置文件
 │  ├─tags.php           应用行为扩展定义文件
