@@ -1,6 +1,6 @@
-ChemCMS
-===============
- 请关注你的地球一下下:[地球日](http://baike.baidu.com/item/%E4%B8%96%E7%95%8C%E5%9C%B0%E7%90%83%E6%97%A5)
+ChemCMS Free
+
+如果你需要跟高级多内部管理功能请使用我们的旗舰版
 
 ### 环境推荐
 > php5.5+
@@ -9,46 +9,23 @@ ChemCMS
 
 > 打开rewrite
 
+
+### 最低环境要求
+> php5.4+
+
+> mysql 5.5+ (mysql5.1安装时选择utf8编码，不支持表情符)
+
+> 打开rewrite
+
 ### 安装步骤
 
+1. 搭建您的服务器环境（LNMP环境搭建参照https://www.thinkcmf.com/topic/351.html），或者由服务商提供运行空间。
+2. 把`public`目录设为WEB根目录,如果是虚拟空间请将public移植到空间web目录，并修改入口文件CMF根目录路径。
+3. 设置您的域名解析，这里用yourdomain.com代表您的域名。
+4. 通过浏览器访问http://yourdomain.com   自动跳出安装界面，按照提示填入数据库信息，并设置后台管理账号，注意这里设置的账号是超级管理账号，请牢记密码。
+5. 提示安装完毕，您可以访问后台和前台了，如果您需要重新安装请删除data/install.lock并重新执行第四步。
 
-1.创建 chemcms5数据库(默认编码utf8mb4),并导入 update/chemcms5.sql
 
-2.在 data目录下创建 conf/database.php 文件,内容如下:
-
-```php
-<?php
-
-return [
-    // 数据库类型
-    'type'           => 'mysql',
-    // 服务器地址
-    'hostname'       => 'localhost',
-    // 数据库名
-    'database'       => '你的数据库名',
-    // 用户名
-    'username'       => '你的数据库用户名',
-    // 密码
-    'password'       => '你的数据库密码',
-    // 端口
-    'hostport'       => '3306',
-    // 数据库编码默认采用utf8
-    'charset'        => 'utf8mb4',
-    // 数据库表前缀
-    'prefix'         => 'cmf_',
-    "authcode" => 'CviMdXkZ3vUxyJCwNt',
-];
-```
-更改为你的数据库信息
-
-3.把 public目录做为网站根目录,入口文件在 public/index.php
-
-4.后台
-你的域名/admin  
-用户名/密码:admin/111111
-
-如果你需要 `api` 开发请下载:  
-ThinkCMF5 API :https://github.com/chemcms/chemcmsapi
 
 ### 完整版目录结构
 ```
@@ -77,8 +54,8 @@ chemcms  根目录
 │  ├─plugins            插件目录
 │  ├─static             静态资源存放目录(css,js,image)
 │  ├─themes             前后台主题目录
-│  │  ├─admin_simpleboot3  后台默认主题
-│  │  └─simpleboot3            前台默认主题
+│  │  ├─admin_chemcms  后台默认主题
+│  │  └─chemcms           前台默认主题
 │  ├─upload             文件上传目录
 │  ├─index.php          入口文件
 │  ├─robots.txt         爬虫协议文件
@@ -95,64 +72,10 @@ chemcms  根目录
 ├─think                 命令行入口文件
 ```
 
-### 开发手册
-http://www.kancloud.cn/chemcms/doc
-
-### QQ群:
-ThinkCMF VIP技术群:100828313 (付费)
+### QQ交流群
+ChemCMS交流群:624934968
 
 ### 反馈问题
+
 https://github.com/chemcms/chemcms/issues
-
-### 更新日志
-#### 5.0.170422
-[核心]
-* 完善幻灯片
-* 完善后台控制器方法注释
-* 增加调试模式下实时更新模板配置
-* 增加友情链接图片上传
-* 增加应用公共语言包功能
-* 增加资源管理
-* 增加模板设计数据源层级关系
-* 更新jQuery Form版本
-* 增加后台菜单类型是否有界面区分
-* 增加权限验证时权限规则里没有的规则不用验证
-* 增加前台网站信息获取
-* 优化后台菜单导入
-* 统一排序规则,按从小到大排序
-* 修复后台模板管理点更新提示卸载
-* 修复标签`NavigationMenu`
-* 修复菜单导入时未添加权限规则
-* 修复`navigationFolder`设置多个子菜单后会多循环数据
-* 修复部分代码php5.4下不兼容
-* 修复后台菜单不能添加编辑
-
-[门户应用]
-* 完全独立门户应用
-* 完善后台页面管理
-* 完善面包屑标签`breadcrumb`
-* 完善文章分类管理
-* 完善文章管理
-* 修复文章分类`path`更新
-* 优化文章列表标签`articles`
-* 优化后台文章分类选择
-* 增加前台文章点赞功能
-* 增加前台文章搜索功能
-* 增加文章列表分页总数获取
-
-#### 5.0.170401
-* 完善文件上传
-* 增加回收站功能
-* 完善友情链接
-* 优化网站设置
-* 增加后台登陆验证码
-* 修复后台用户密码修改
-* 修复用户管理-本站用户头像不显示
-* 完善前台用户登录注册
-* 增加后台菜单导入
-* 修复后台菜单列表排序
-* 完善导航
-* 增加插件钩子管理
-* 完善前台模板
-
 
